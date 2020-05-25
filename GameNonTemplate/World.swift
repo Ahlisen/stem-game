@@ -98,6 +98,8 @@ class World {
             let disk = SCNNode(geometry: diskGeo)
             disk.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape.init(geometry: diskGeo, options: nil))
             disk.physicsBody?.mass = 10
+            disk.physicsBody?.friction = 100000
+            disk.position = SCNVector3(0,0,offset)
             weightScale.addChildNode(disk)
 
 

@@ -64,6 +64,18 @@ struct SceneKitView: UIViewRepresentable {
             super.init()
         }
 
+        func renderer(_ renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {
+            let node = parent.scene.rootNode.childNode(withName: "weightScale", recursively: true)!
+            let verticalRod = parent.scene.rootNode.childNode(withName: "weightScaleVertical", recursively: true)!
+
+            if abs(node.presentation.eulerAngles.x) < 0.1 {
+                verticalRod.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+            } else {
+                verticalRod.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            }
+
+        }
+
         @objc func didTapView(panGesture: UIPanGestureRecognizer) {
 
             guard let view = panGesture.view as? SCNView else { return }
