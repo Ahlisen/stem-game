@@ -95,7 +95,9 @@ struct SceneKitView: UIViewRepresentable {
                 guard let panStartZ = panStartZ else { return }
                 let location = panGesture.location(in: view)
                 let worldTouchPosition = view.unprojectPoint(SCNVector3(location.x, location.y, panStartZ))
-                let newPos = SCNVector3(worldTouchPosition.x, worldTouchPosition.y, 0)
+                let newY = max(0.75, worldTouchPosition.y - worldTouchPosition.z / 2)
+                let newZ = -min(0, worldTouchPosition.y - worldTouchPosition.z - 0.75)
+                let newPos = SCNVector3(worldTouchPosition.x, newY, newZ)
                 draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
                 draggingNode?.worldPosition = newPos
                 draggingNode?.physicsBody?.isAffectedByGravity = false
