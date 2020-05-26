@@ -72,7 +72,7 @@ struct SceneKitView: UIViewRepresentable {
 
             let disk = parent.scene.rootNode.childNode(withName: "disk", recursively: true)!
 
-            print(disk.eulerAngles)
+//            print(disk.eulerAngles)
 //            node.presentation.eulerAngles.x = 0
 //            node.presentation.eulerAngles.z = 0
 
@@ -94,13 +94,12 @@ struct SceneKitView: UIViewRepresentable {
                 lastPanLocation = hitNodeResult.worldCoordinates
                 panStartZ = CGFloat(view.projectPoint(lastPanLocation!).z)
                 draggingNode = hitNodeResult.node
-                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+//                draggingNode?.geometry?.firstMaterial?.specular.contents = UIColor.green
                 draggingNode?.physicsBody?.allowsResting = false
                 mass = draggingNode?.physicsBody?.mass ?? 0
                 print("Mass: \(draggingNode!.physicsBody!.mass)")
                 draggingNode?.physicsBody?.isAffectedByGravity = false
                 draggingNode?.physicsBody?.type = .kinematic
-
 
             case .changed:
                 guard let panStartZ = panStartZ else { return }
@@ -109,13 +108,13 @@ struct SceneKitView: UIViewRepresentable {
                 let newY = max(0.75, worldTouchPosition.y - worldTouchPosition.z / 2)
                 let newZ = -min(0, worldTouchPosition.y - worldTouchPosition.z - 0.75)
                 let newPos = SCNVector3(worldTouchPosition.x, newY, newZ)
-                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
+//                draggingNode?.geometry?.firstMaterial?.specular.contents = UIColor.yellow
                 draggingNode?.worldPosition = newPos
                 draggingNode?.physicsBody?.isAffectedByGravity = false
                 draggingNode?.physicsBody?.type = .kinematic
 
             case .ended, .cancelled:
-                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+//                draggingNode?.geometry?.firstMaterial?.specular.contents = UIColor.red
                 draggingNode?.physicsBody?.type = .dynamic
                 draggingNode?.physicsBody?.isAffectedByGravity = true
                 draggingNode?.physicsBody?.mass = mass

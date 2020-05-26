@@ -64,16 +64,45 @@ class ScaleWorld {
             }
         }
 
+
+
         AnalogScale(scene: scene).createScale()
 
         addWeights()
+        makeSoup()
+    }
+
+    func makeSoup() {
+        let cylinder = SCNCylinder(radius: 0.5, height: 1.5)
+        let cylinderNode = SCNNode(geometry: cylinder)
+        let side = SCNMaterial()
+        side.diffuse.contents = UIImage(named: "soup")
+        side.diffuse.contentsTransform = SCNMatrix4MakeScale(2, 1, 0)
+        side.diffuse.wrapS = .repeat
+        side.diffuse.wrapT = .repeat
+        let top = SCNMaterial()
+        top.diffuse.contents = UIImage(named: "canTop")
+        let topBottom = SCNMaterial()
+        topBottom.diffuse.contents = UIImage(named: "canbottom")
+        cylinder.materials = [side, top, topBottom]
+        cylinderNode.position = SCNVector3(5, 2, 0)
+        cylinderNode.rotation = SCNVector4(0, CGFloat.pi/4, 0, 1)
+        cylinderNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(geometry: cylinder, options: nil))
+        cylinderNode.physicsBody?.collisionBitMask = 1 << 1
+        cylinderNode.physicsBody?.categoryBitMask = 1 << 1
+        cylinderNode.physicsBody?.contactTestBitMask = 1 << 1
+        cylinderNode.physicsBody?.mass = CGFloat(Int.random(in: 1..<10))
+        cylinderNode.name = "soup"
+        scene.rootNode.addChildNode(cylinderNode)
     }
 
     func reset() {
         weights.forEach { $0.removeFromParentNode() }
         weights.removeAll()
+        scene.rootNode.childNode(withName: "soup", recursively: true)?.removeFromParentNode()
 
         addWeights()
+        makeSoup()
     }
 
     private func addWeights() {

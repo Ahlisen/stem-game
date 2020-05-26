@@ -60,7 +60,8 @@ class WeightFactory {
 
 
     func makeMetal(geometry: SCNGeometry) {
-        geometry.firstMaterial?.diffuse.contents = UIColor.lightGray
+        let image = UIImage(named: "soup")
+        geometry.firstMaterial?.diffuse.contents = [image, image]
         geometry.firstMaterial?.specular.contents = UIColor.lightGray
         geometry.firstMaterial?.lightingModel = .physicallyBased
         geometry.firstMaterial?.roughness.contents = 0.5
