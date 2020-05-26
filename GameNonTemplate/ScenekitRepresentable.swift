@@ -8,8 +8,12 @@
 
 import SwiftUI
 import SceneKit
+import SpriteKit
+
 
 struct SceneKitView: UIViewRepresentable {
+    private let overlay = Overlay(size: UIScreen.main.bounds.size)
+
     let scene: SCNScene
     let world: ScaleWorld
 
@@ -20,11 +24,18 @@ struct SceneKitView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> SCNView {
-        self.world.reset()
+        world.setup()
+
+        overlay.didTapResetButton = { [world] in
+            world.reset()
+        }
+
         let scnView = SCNView()
         scnView.delegate = context.coordinator
+        scnView.overlaySKScene = overlay
 
-        let gesture = InstantPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.didTapView))
+        let gesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.didTapView))
+        gesture.cancelsTouchesInView = false
         scnView.addGestureRecognizer(gesture)
 
 //        scnView.pointOfView = world.secondCameraNode
@@ -46,6 +57,7 @@ struct SceneKitView: UIViewRepresentable {
     class Coordinator: NSObject, SCNSceneRendererDelegate {
         var parent: SceneKitView
         var draggingNode: SCNNode?
+        var mass: CGFloat = 0
         var panStartZ: CGFloat?
         var lastPanLocation: SCNVector3?
 
@@ -57,6 +69,12 @@ struct SceneKitView: UIViewRepresentable {
         func renderer(_ renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {
             let node = parent.scene.rootNode.childNode(withName: "weightScale", recursively: true)!
             let verticalRod = parent.scene.rootNode.childNode(withName: "weightScaleVertical", recursively: true)!
+
+            let disk = parent.scene.rootNode.childNode(withName: "disk", recursively: true)!
+
+//            print(disk.eulerAngles)
+//            node.presentation.eulerAngles.x = 0
+//            node.presentation.eulerAngles.z = 0
 
             if abs(node.presentation.eulerAngles.x) < 0.1 {
                 verticalRod.geometry?.firstMaterial?.diffuse.contents = UIColor.green
@@ -76,26 +94,30 @@ struct SceneKitView: UIViewRepresentable {
                 lastPanLocation = hitNodeResult.worldCoordinates
                 panStartZ = CGFloat(view.projectPoint(lastPanLocation!).z)
                 draggingNode = hitNodeResult.node
-                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+//                draggingNode?.geometry?.firstMaterial?.specular.contents = UIColor.green
                 draggingNode?.physicsBody?.allowsResting = false
+                mass = draggingNode?.physicsBody?.mass ?? 0
+                print("Mass: \(draggingNode!.physicsBody!.mass)")
                 draggingNode?.physicsBody?.isAffectedByGravity = false
                 draggingNode?.physicsBody?.type = .kinematic
-                print("Mass: \(draggingNode!.physicsBody!.mass)")
 
             case .changed:
                 guard let panStartZ = panStartZ else { return }
                 let location = panGesture.location(in: view)
                 let worldTouchPosition = view.unprojectPoint(SCNVector3(location.x, location.y, panStartZ))
-                let newPos = SCNVector3(worldTouchPosition.x, worldTouchPosition.y, 0)
-                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
+                let newY = max(0.75, worldTouchPosition.y - worldTouchPosition.z / 2)
+                let newZ = -min(0, worldTouchPosition.y - worldTouchPosition.z - 0.75)
+                let newPos = SCNVector3(worldTouchPosition.x, newY, newZ)
+//                draggingNode?.geometry?.firstMaterial?.specular.contents = UIColor.yellow
                 draggingNode?.worldPosition = newPos
                 draggingNode?.physicsBody?.isAffectedByGravity = false
                 draggingNode?.physicsBody?.type = .kinematic
 
             case .ended, .cancelled:
-                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+//                draggingNode?.geometry?.firstMaterial?.specular.contents = UIColor.red
                 draggingNode?.physicsBody?.type = .dynamic
                 draggingNode?.physicsBody?.isAffectedByGravity = true
+                draggingNode?.physicsBody?.mass = mass
                 draggingNode = nil
 
             default:
