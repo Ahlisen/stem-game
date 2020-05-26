@@ -18,6 +18,8 @@ class ScaleWorld {
     var secondCameraNode: SCNNode
     var light: SCNNode?
 
+    var startMeasuring: Bool = false
+
     init(scene: SCNScene) {
         self.scene = scene
         self.tilemap = Tilemap.init()
@@ -108,6 +110,9 @@ class ScaleWorld {
 
         addWeights()
         makeSoup()
+
+        startMeasuring = false
+        light?.geometry?.firstMaterial?.diffuse.contents = UIColor.white
     }
 
     private func addWeights() {

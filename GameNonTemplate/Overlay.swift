@@ -78,7 +78,7 @@ class Overlay: SKScene {
     }
 
     private let titleLabel: SKLabelNode = {
-        let instance = SKLabelNode(text: "Hur mycket väger soppan?")
+        let instance = SKLabelNode(text: "Hur mycket väger soppan? ™")
         instance.fontName = "Courier-Bold"
         instance.fontSize = 20
         instance.fontColor = .white

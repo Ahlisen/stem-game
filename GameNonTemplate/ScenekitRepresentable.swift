@@ -68,22 +68,17 @@ struct SceneKitView: UIViewRepresentable {
 
         func renderer(_ renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {
             let node = parent.scene.rootNode.childNode(withName: "weightScale", recursively: true)!
-            let verticalRod = parent.scene.rootNode.childNode(withName: "weightScaleVertical", recursively: true)!
-
             let success = parent.scene.rootNode.childNode(withName: "success", recursively: true)!
-
-            
-
-//            print(disk.eulerAngles)
-//            node.presentation.eulerAngles.x = 0
-//            node.presentation.eulerAngles.z = 0
 
             let torque = -node.presentation.eulerAngles.x * 10
             node.physicsBody?.applyTorque(SCNVector4(0, 0, torque, 1.0), asImpulse: false)
 
             if abs(node.presentation.eulerAngles.x) < 0.1 {
-                success.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                if parent.world.startMeasuring {
+                    success.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                }
             } else {
+                parent.world.startMeasuring = true
                 success.geometry?.firstMaterial?.diffuse.contents = UIColor.red
             }
 
