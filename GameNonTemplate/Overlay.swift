@@ -20,7 +20,7 @@ final class ButtonNode: SKShapeNode {
 
         label = SKLabelNode(text: title)
         label.fontName = "Courier-Bold"
-        label.fontSize = 50
+        label.fontSize = 40
         label.fontColor = .white
         label.position = CGPoint(x: label.frame.width / 2 + padding, y: padding)
 
