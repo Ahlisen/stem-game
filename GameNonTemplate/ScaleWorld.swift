@@ -14,19 +14,15 @@ class ScaleWorld {
     let scene: SCNScene
     let weightFactory = WeightFactory()
     var tilemap: Tilemap
+    var cameraNode: SCNNode
     var secondCameraNode: SCNNode
 
     init(scene: SCNScene) {
         self.scene = scene
         self.tilemap = Tilemap.init()
-
-//        secondCameraNode = SCNNode()
-//        let camera = SCNCamera()
-//        camera.vignettingPower = 2
+        
+        cameraNode = self.scene.rootNode.childNode(withName: "camera", recursively: true)!
         secondCameraNode = self.scene.rootNode.childNode(withName: "secondCamera", recursively: true)!
-//        secondCameraNode.camera = camera
-//        secondCameraNode.position = SCNVector3(x: 1, y: 1, z: 15)
-//        secondCameraNode.eulerAngles = SCNVector3(x: 0, y: 0, z: 0)
     }
 
     func setup() {
@@ -37,7 +33,7 @@ class ScaleWorld {
 
         scene.rootNode.addChildNode(secondCameraNode)
 
-//        let customerNode = scene.rootNode.childNode(withName: "customer", recursively: true)!
+        //        let customerNode = scene.rootNode.childNode(withName: "customer", recursively: true)!
 
         for x in 0..<tilemap.height {
             for y in 0..<tilemap.width {
@@ -64,9 +60,10 @@ class ScaleWorld {
             }
         }
 
-
-
-        AnalogScale(scene: scene).createScale()
+        let scale = AnalogScale(scene: scene)
+        scale.createScale()
+        let scalePosition = scale.weightScale.position
+        moveCamera(position: scalePosition)
 
         addWeights()
         makeSoup()
@@ -121,5 +118,23 @@ class ScaleWorld {
 
             weights.append(childNode)
         }
+    }
+    
+    func moveCamera(position: SCNVector3) {
+        cameraNode.look(at: position)
+        
+        let animationDuration = 3.5
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = animationDuration
+        SCNTransaction.animationTimingFunction = CAMediaTimingFunction.init(name: .easeOut)
+        cameraNode.camera?.orthographicScale = 4.5
+        SCNTransaction.commit()
+        
+        let finalPosition = position - SCNVector3.init(0, -1, -5)
+        let move = SCNAction.move(to: finalPosition, duration: animationDuration)
+        let rotate = SCNAction.rotateTo(x: -.pi/6, y: 0, z: 0, duration: animationDuration)
+        let actionGroup = SCNAction.group([move, rotate])
+        actionGroup.timingMode = .easeOut
+        cameraNode.runAction(actionGroup)
     }
 }
