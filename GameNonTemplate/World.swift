@@ -8,7 +8,7 @@
 
 import SceneKit
 
-class World {
+class ScaleWorld {
     let scene: SCNScene
     let weightFactory = WeightFactory()
     var tilemap: Tilemap
@@ -163,35 +163,6 @@ class World {
         makeDiskAndChains(offset: -2.25)
         makeDiskAndChains(offset: 2.25)
 
-//        var previousNode: SCNNode?
-//
-//        for x in 0..<10 {
-//            let sphere = SCNSphere()
-//            sphere.radius = 0.1
-//            let nox = SCNNode(geometry: sphere)
-////            nox.transform = SCNMatrix4MakeTranslation(0, 0, 2)
-//            nox.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape.init(geometry: sphere, options: nil))
-//            weightScale.addChildNode(nox)
-//
-//            if let previousNode = previousNode {
-//                let behaviour = SCNPhysicsBallSocketJoint(bodyA: nox.physicsBody!, anchorA: .init(0, 0, 0), bodyB: previousNode.physicsBody!, anchorB: .init(0, 0.2, 0))
-//                scene.physicsWorld.addBehavior(behaviour)
-//            } else {
-//                let joint3 = SCNPhysicsHingeJoint.init(bodyA: nox.physicsBody!, axisA: .init(0, 0, 1), anchorA: .init(0, 0, 0), bodyB: weightScale.physicsBody!, axisB: .init(1, 0, 0), anchorB: .init(0.5, 0, -3))
-////                let behaviour = SCNPhysicsBallSocketJoint(body: nox.physicsBody!, anchor: .init(0, -0.2, 0))
-//                scene.physicsWorld.addBehavior(joint3)
-//            }
-//
-//            previousNode = nox
-//        }
-
-//        let animation = CABasicAnimation(keyPath: "transform")
-//        animation.fromValue = customerNode.transform
-//        animation.toValue = SCNMatrix4Mult(customerNode.transform,SCNMatrix4MakeRotation(.pi,  1, 0, 0.0))
-//        animation.duration = 1.5
-//        animation.repeatCount = 100
-//        customerNode.addAnimation(animation, forKey: nil)
-//
         for x in 1..<10 {
             let childNode = weightFactory.makeWeight(mass: CGFloat(x))
             scene.rootNode.addChildNode(childNode)
@@ -200,12 +171,6 @@ class World {
             childNode.transform = SCNMatrix4MakeTranslation(Float(x)/10*Float(mass)-2, 0, 1.5)
         }
 
-//        let box = SCNBox()
-//        childNode.geometry = box
-//        let newNode = childNode.clone()
-//        newNode.localTranslate(by: SCNVector3(sqrt(3), 0, 0))
-//        scene.rootNode.addChildNode(childNode)
-//        scene.rootNode.addChildNode(newNode)
     }
 }
 

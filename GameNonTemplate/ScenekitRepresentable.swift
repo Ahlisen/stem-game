@@ -9,24 +9,14 @@
 import SwiftUI
 import SceneKit
 
-class InstantPanGestureRecognizer: UIPanGestureRecognizer {
-
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
-        if self.state == .began { return }
-        super.touchesBegan(touches, with: event)
-        self.state = .began
-    }
-
-}
-
 struct SceneKitView: UIViewRepresentable {
     let scene: SCNScene
-    let world: World
+    let world: ScaleWorld
 
     init() {
         let scene = SCNScene(named: "Hub.scn")!
         self.scene = scene
-        world = World(scene: scene)
+        world = ScaleWorld(scene: scene)
     }
 
     func makeUIView(context: Context) -> SCNView {
@@ -119,43 +109,5 @@ struct SceneKitView: UIViewRepresentable {
 struct SceneKitView_Previews: PreviewProvider {
     static var previews: some View {
         SceneKitView()
-    }
-}
-
-class WeightFactory {
-
-    func makeWeight(mass: CGFloat) -> SCNNode {
-
-        let height: CGFloat = 0.5 * log(mass)
-        let radius: CGFloat = 0.25 * log(mass)
-
-        let geometry = SCNCylinder(radius: radius, height: height)
-        let childNode = SCNNode()
-        makeMetal(geometry: geometry)
-        childNode.geometry = geometry
-        childNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape.init(geometry: geometry, options: nil))
-        childNode.physicsBody?.mass = mass
-        childNode.physicsBody?.rollingFriction = 0.5
-        childNode.physicsBody?.friction = 1
-//        childNode.physicsBody?.centerOfMassOffset = SCNVector3(0, -height/4, 0)
-
-
-        let miniGeo = SCNCylinder(radius: radius/2.5, height: height/2)
-        makeMetal(geometry: miniGeo)
-        let miniChild = SCNNode(geometry: miniGeo)
-        miniChild.pivot = SCNMatrix4MakeTranslation(0, -Float(height/4), 0)
-        childNode.addChildNode(miniChild)
-        miniChild.transform = SCNMatrix4MakeTranslation(0, Float(height/2), 0)
-
-        return childNode
-    }
-
-
-    func makeMetal(geometry: SCNGeometry) {
-        geometry.firstMaterial?.diffuse.contents = UIColor.lightGray
-        geometry.firstMaterial?.specular.contents = UIColor.lightGray
-        geometry.firstMaterial?.lightingModel = .physicallyBased
-        geometry.firstMaterial?.roughness.contents = 0.5
-        geometry.firstMaterial?.metalness.contents = 0.5
     }
 }
