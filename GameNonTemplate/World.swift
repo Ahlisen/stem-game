@@ -127,6 +127,7 @@ class World {
         func makeChain(offset: Double, index: Double) -> SCNNode? {
             var previousNode: SCNNode?
             let sphere = SCNSphere()
+            sphere.segmentCount = 4
             sphere.radius = 0.05
             makeGold(geometry: sphere)
 

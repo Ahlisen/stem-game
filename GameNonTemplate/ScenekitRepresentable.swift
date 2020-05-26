@@ -86,6 +86,10 @@ struct SceneKitView: UIViewRepresentable {
                 lastPanLocation = hitNodeResult.worldCoordinates
                 panStartZ = CGFloat(view.projectPoint(lastPanLocation!).z)
                 draggingNode = hitNodeResult.node
+                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                draggingNode?.physicsBody?.allowsResting = false
+                draggingNode?.physicsBody?.isAffectedByGravity = false
+                draggingNode?.physicsBody?.type = .kinematic
                 print("Mass: \(draggingNode!.physicsBody!.mass)")
 
             case .changed:
@@ -93,10 +97,14 @@ struct SceneKitView: UIViewRepresentable {
                 let location = panGesture.location(in: view)
                 let worldTouchPosition = view.unprojectPoint(SCNVector3(location.x, location.y, panStartZ))
                 let newPos = SCNVector3(worldTouchPosition.x, worldTouchPosition.y, 0)
+                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
                 draggingNode?.worldPosition = newPos
                 draggingNode?.physicsBody?.isAffectedByGravity = false
+                draggingNode?.physicsBody?.type = .kinematic
 
             case .ended, .cancelled:
+                draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                draggingNode?.physicsBody?.type = .dynamic
                 draggingNode?.physicsBody?.isAffectedByGravity = true
                 draggingNode = nil
 
