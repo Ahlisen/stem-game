@@ -35,11 +35,12 @@ class AnalogScale {
 
     func makeDiskAndChains(offset: Double) {
 
-        let end1 = makeChain(offset: offset, index: 2)
-        let end2 = makeChain(offset: offset, index: 1)
-        let end3 = makeChain(offset: offset, index: 0)
+        let end1 = makeChain(offset: offset, index: 3)
+        let end2 = makeChain(offset: offset, index: 2)
+        let end3 = makeChain(offset: offset, index: 1)
+        let end4 = makeChain(offset: offset, index: 0)
 
-        let array = [end1, end2, end3]
+        let array = [end1, end2, end3, end4]
 
         let diskGeo = SCNCylinder(radius: 1, height: 0.2)
         makeGold(geometry: diskGeo)
@@ -72,7 +73,7 @@ class AnalogScale {
         //            torusNode.transform = SCNMatrix4MakeTranslation(0, -0.25, 0)
 
         for (index, end) in array.enumerated() {
-            let trueAngle: Double = (.pi * 2 / 3) * Double(index)
+            let trueAngle: Double = (.pi * 2 / 4) * Double(index)
 
             let x = 1 * cos(trueAngle)
             let y = 1 * sin(trueAngle)
@@ -103,10 +104,10 @@ class AnalogScale {
                 scene.physicsWorld.addBehavior(behaviour)
             } else {
 
-                let trueAngle: Double = (.pi * 2 / 3) * Double(index)
+                let trueAngle: Double = (.pi * 2 / 4) * Double(index)
 
-                let x1 = 0.15 * cos(trueAngle)
-                let y = 0.15 * sin(trueAngle)
+                let x1 = 0.0 * cos(trueAngle)
+                let y = 0.0 * sin(trueAngle)
 
                 let joint3 = SCNPhysicsHingeJoint.init(bodyA: nox.physicsBody!, axisA: .init(0, 0, 1), anchorA: .init(0, 0, 0), bodyB: weightScale.physicsBody!, axisB: .init(1, 0, 0), anchorB: .init(x1, 0, y + offset))
                 //                let behaviour = SCNPhysicsBallSocketJoint(body: nox.physicsBody!, anchor: .init(0, -0.2, 0))

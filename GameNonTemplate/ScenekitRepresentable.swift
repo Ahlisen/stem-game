@@ -70,16 +70,21 @@ struct SceneKitView: UIViewRepresentable {
             let node = parent.scene.rootNode.childNode(withName: "weightScale", recursively: true)!
             let verticalRod = parent.scene.rootNode.childNode(withName: "weightScaleVertical", recursively: true)!
 
-            let disk = parent.scene.rootNode.childNode(withName: "disk", recursively: true)!
+            let success = parent.scene.rootNode.childNode(withName: "success", recursively: true)!
+
+            
 
 //            print(disk.eulerAngles)
 //            node.presentation.eulerAngles.x = 0
 //            node.presentation.eulerAngles.z = 0
 
+            let torque = -node.presentation.eulerAngles.x * 10
+            node.physicsBody?.applyTorque(SCNVector4(0, 0, torque, 1.0), asImpulse: false)
+
             if abs(node.presentation.eulerAngles.x) < 0.1 {
-                verticalRod.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                success.geometry?.firstMaterial?.diffuse.contents = UIColor.green
             } else {
-                verticalRod.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+                success.geometry?.firstMaterial?.diffuse.contents = UIColor.red
             }
 
         }

@@ -16,6 +16,7 @@ class ScaleWorld {
     var tilemap: Tilemap
     var cameraNode: SCNNode
     var secondCameraNode: SCNNode
+    var light: SCNNode?
 
     init(scene: SCNScene) {
         self.scene = scene
@@ -67,6 +68,13 @@ class ScaleWorld {
 
         addWeights()
         makeSoup()
+
+        let sphere = SCNSphere()
+        let sphereNode = SCNNode(geometry: sphere)
+        scene.rootNode.addChildNode(sphereNode)
+        sphereNode.position = SCNVector3(0, 6, 0)
+        light = sphereNode
+        light?.name = "success"
     }
 
     func makeSoup() {
@@ -88,7 +96,7 @@ class ScaleWorld {
         cylinderNode.physicsBody?.collisionBitMask = 1 << 1
         cylinderNode.physicsBody?.categoryBitMask = 1 << 1
         cylinderNode.physicsBody?.contactTestBitMask = 1 << 1
-        cylinderNode.physicsBody?.mass = CGFloat(Int.random(in: 1..<10))
+        cylinderNode.physicsBody?.mass = CGFloat(Int.random(in: 1..<21))
         cylinderNode.name = "soup"
         scene.rootNode.addChildNode(cylinderNode)
     }
@@ -103,9 +111,10 @@ class ScaleWorld {
     }
 
     private func addWeights() {
-        let numberOfWeights = 10
-        for x in 1...numberOfWeights {
-            let childNode = weightFactory.makeWeight(mass: CGFloat(x))
+        let weightsNum = [1,1,2,3,5,8,13,21]
+        let numberOfWeights = weightsNum.count
+        for (x, weight) in weightsNum.enumerated() {
+            let childNode = weightFactory.makeWeight(mass: CGFloat(weight))
             scene.rootNode.addChildNode(childNode)
 
             let y = (x) % 3

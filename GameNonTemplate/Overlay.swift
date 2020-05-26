@@ -15,6 +15,7 @@ final class ButtonNode: SKShapeNode {
 
     var tapHandler: (() -> Void)?
 
+
     required init(title: String) {
         let padding: CGFloat = 10
 
@@ -76,9 +77,18 @@ class Overlay: SKScene {
         set { resetButton.tapHandler = newValue }
     }
 
+    private let titleLabel: SKLabelNode = {
+        let instance = SKLabelNode(text: "Hur mycket väger soppan?")
+        instance.fontName = "Courier-Bold"
+        instance.fontSize = 20
+        instance.fontColor = .white
+        return instance
+    }()
+
     override init(size: CGSize) {
         super.init(size: size)
 
+        addChild(titleLabel)
         addChild(resetButton)
     }
 
@@ -92,5 +102,7 @@ class Overlay: SKScene {
         resetButton.position = CGPoint(
             x: size.width - resetButton.frame.width - 10,
             y: size.height - resetButton.frame.height - 10)
+
+        titleLabel.position = CGPoint(x: titleLabel.frame.width / 2 + 10, y: size.height - titleLabel.frame.height - 10)
     }
 }
