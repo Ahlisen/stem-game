@@ -50,6 +50,15 @@ class AnalogScale {
         disk.physicsBody?.mass = 10
         disk.physicsBody?.friction = 100000
         disk.position = SCNVector3(0,0,offset)
+        disk.physicsBody?.collisionBitMask = 1 << 1
+        disk.physicsBody?.categoryBitMask = 1 << 1
+
+//        let constraint = SCNTransformConstraint.orientationConstraint(inWorldSpace: true, with: { _, _ in
+//            return SCNQuaternion(0, 0, 0, 1)
+//        })
+//        disk.constraints = [constraint]
+        disk.name = "disk"
+
         weightScale.addChildNode(disk)
 
 

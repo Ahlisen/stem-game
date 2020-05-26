@@ -63,13 +63,20 @@ class ScaleWorld {
         }
 
         AnalogScale(scene: scene).createScale()
-
-        for x in 1..<10 {
+        let numberOfWeights = 10
+        for x in 1...numberOfWeights {
             let childNode = weightFactory.makeWeight(mass: CGFloat(x))
             scene.rootNode.addChildNode(childNode)
 
             let mass = childNode.physicsBody!.mass
-            childNode.transform = SCNMatrix4MakeTranslation(Float(x)/10*Float(mass)-2, 0, 1.5)
+
+            let y = (x) % 3
+            let posx = CGFloat(y)*1.3 - 7
+
+            let posy = 0.0
+            let posz = Double(numberOfWeights-x) - 6.0
+            let pos = SCNVector3(Double(posx), posy, posz)
+            childNode.transform = SCNMatrix4MakeTranslation(pos.x, pos.y, pos.z)
         }
 
     }

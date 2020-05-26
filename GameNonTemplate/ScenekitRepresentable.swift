@@ -46,6 +46,7 @@ struct SceneKitView: UIViewRepresentable {
     class Coordinator: NSObject, SCNSceneRendererDelegate {
         var parent: SceneKitView
         var draggingNode: SCNNode?
+        var mass: CGFloat = 0
         var panStartZ: CGFloat?
         var lastPanLocation: SCNVector3?
 
@@ -57,6 +58,12 @@ struct SceneKitView: UIViewRepresentable {
         func renderer(_ renderer: SCNSceneRenderer, didSimulatePhysicsAtTime time: TimeInterval) {
             let node = parent.scene.rootNode.childNode(withName: "weightScale", recursively: true)!
             let verticalRod = parent.scene.rootNode.childNode(withName: "weightScaleVertical", recursively: true)!
+
+            let disk = parent.scene.rootNode.childNode(withName: "disk", recursively: true)!
+
+            print(disk.eulerAngles)
+//            node.presentation.eulerAngles.x = 0
+//            node.presentation.eulerAngles.z = 0
 
             if abs(node.presentation.eulerAngles.x) < 0.1 {
                 verticalRod.geometry?.firstMaterial?.diffuse.contents = UIColor.green
@@ -78,15 +85,19 @@ struct SceneKitView: UIViewRepresentable {
                 draggingNode = hitNodeResult.node
                 draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.green
                 draggingNode?.physicsBody?.allowsResting = false
+                mass = draggingNode?.physicsBody?.mass ?? 0
+                print("Mass: \(draggingNode!.physicsBody!.mass)")
                 draggingNode?.physicsBody?.isAffectedByGravity = false
                 draggingNode?.physicsBody?.type = .kinematic
-                print("Mass: \(draggingNode!.physicsBody!.mass)")
+
 
             case .changed:
                 guard let panStartZ = panStartZ else { return }
                 let location = panGesture.location(in: view)
                 let worldTouchPosition = view.unprojectPoint(SCNVector3(location.x, location.y, panStartZ))
-                let newPos = SCNVector3(worldTouchPosition.x, worldTouchPosition.y, 0)
+                let newY = max(0.75, worldTouchPosition.y - worldTouchPosition.z / 2)
+                let newZ = -min(0, worldTouchPosition.y - worldTouchPosition.z - 0.75)
+                let newPos = SCNVector3(worldTouchPosition.x, newY, newZ)
                 draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
                 draggingNode?.worldPosition = newPos
                 draggingNode?.physicsBody?.isAffectedByGravity = false
@@ -96,6 +107,7 @@ struct SceneKitView: UIViewRepresentable {
                 draggingNode?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
                 draggingNode?.physicsBody?.type = .dynamic
                 draggingNode?.physicsBody?.isAffectedByGravity = true
+                draggingNode?.physicsBody?.mass = mass
                 draggingNode = nil
 
             default:
