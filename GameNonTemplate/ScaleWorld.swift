@@ -9,6 +9,8 @@
 import SceneKit
 
 class ScaleWorld {
+    private var weights: [SCNNode] = []
+
     let scene: SCNScene
     let weightFactory = WeightFactory()
     var tilemap: Tilemap
@@ -27,7 +29,7 @@ class ScaleWorld {
 //        secondCameraNode.eulerAngles = SCNVector3(x: 0, y: 0, z: 0)
     }
 
-    func reset() {
+    func setup() {
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
         scene.rootNode.addChildNode(cameraNode)
@@ -63,12 +65,22 @@ class ScaleWorld {
         }
 
         AnalogScale(scene: scene).createScale()
+
+        addWeights()
+    }
+
+    func reset() {
+        weights.forEach { $0.removeFromParentNode() }
+        weights.removeAll()
+
+        addWeights()
+    }
+
+    private func addWeights() {
         let numberOfWeights = 10
         for x in 1...numberOfWeights {
             let childNode = weightFactory.makeWeight(mass: CGFloat(x))
             scene.rootNode.addChildNode(childNode)
-
-            let mass = childNode.physicsBody!.mass
 
             let y = (x) % 3
             let posx = CGFloat(y)*1.3 - 7
@@ -77,7 +89,8 @@ class ScaleWorld {
             let posz = Double(numberOfWeights-x) - 6.0
             let pos = SCNVector3(Double(posx), posy, posz)
             childNode.transform = SCNMatrix4MakeTranslation(pos.x, pos.y, pos.z)
-        }
 
+            weights.append(childNode)
+        }
     }
 }
