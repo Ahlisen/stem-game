@@ -8,8 +8,12 @@
 
 import SwiftUI
 import SceneKit
+import SpriteKit
+
 
 struct SceneKitView: UIViewRepresentable {
+    private let overlay = Overlay(size: UIScreen.main.bounds.size)
+
     let scene: SCNScene
     let world: ScaleWorld
 
@@ -20,11 +24,18 @@ struct SceneKitView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> SCNView {
-        self.world.reset()
+        world.setup()
+
+        overlay.didTapResetButton = { [world] in
+            world.reset()
+        }
+
         let scnView = SCNView()
         scnView.delegate = context.coordinator
+        scnView.overlaySKScene = overlay
 
-        let gesture = InstantPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.didTapView))
+        let gesture = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.didTapView))
+        gesture.cancelsTouchesInView = false
         scnView.addGestureRecognizer(gesture)
 
 //        scnView.pointOfView = world.secondCameraNode

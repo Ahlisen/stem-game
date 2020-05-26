@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		078C6215247D09DE0027E6BC /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078C6214247D09DE0027E6BC /* Overlay.swift */; };
 		6167EB63247BBC5300E8BD1A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6167EB62247BBC5300E8BD1A /* AppDelegate.swift */; };
 		6167EB65247BBC5300E8BD1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6167EB64247BBC5300E8BD1A /* SceneDelegate.swift */; };
 		6167EB67247BBC5300E8BD1A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6167EB66247BBC5300E8BD1A /* ContentView.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		078C6214247D09DE0027E6BC /* Overlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
 		6167EB5F247BBC5300E8BD1A /* GameNonTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameNonTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6167EB62247BBC5300E8BD1A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6167EB64247BBC5300E8BD1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				6192E3FC247CFEF100536D21 /* WeightFactory.swift */,
 				6192E3FA247BCDD400536D21 /* ScaleWorld.swift */,
 				6192E402247D003700536D21 /* Objects */,
+				078C6214247D09DE0027E6BC /* Overlay.swift */,
 				6192E3F8247BC1F200536D21 /* HubWorld.swift */,
 				6167EB66247BBC5300E8BD1A /* ContentView.swift */,
 				6167EB68247BBC5600E8BD1A /* Assets.xcassets */,
@@ -178,6 +181,7 @@
 			files = (
 				6192E3FB247BCDD400536D21 /* ScaleWorld.swift in Sources */,
 				6192E3F5247BBD2700536D21 /* ScenekitRepresentable.swift in Sources */,
+				078C6215247D09DE0027E6BC /* Overlay.swift in Sources */,
 				6167EB63247BBC5300E8BD1A /* AppDelegate.swift in Sources */,
 				6192E3FF247CFF1C00536D21 /* Helpers.swift in Sources */,
 				6167EB65247BBC5300E8BD1A /* SceneDelegate.swift in Sources */,
