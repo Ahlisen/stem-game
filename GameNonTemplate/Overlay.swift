@@ -16,18 +16,24 @@ final class ButtonNode: SKShapeNode {
     var tapHandler: (() -> Void)?
 
     required init(title: String) {
+        let padding: CGFloat = 10
+
         label = SKLabelNode(text: title)
         label.fontName = "Courier-Bold"
         label.fontSize = 50
         label.fontColor = .white
-        label.position = CGPoint(x: label.frame.width / 2, y: 0)
+        label.position = CGPoint(x: label.frame.width / 2 + padding, y: padding)
 
         super.init()
 
         addChild(label)
 
+        let size = CGSize(
+            width: label.frame.width + 2 * padding,
+            height: label.frame.height + 2 * padding)
+
         path = UIBezierPath(
-            roundedRect: CGRect(origin: .zero, size: label.frame.size),
+            roundedRect: CGRect(origin: .zero, size: size),
             cornerRadius: 2).cgPath
 
         fillColor = .red
